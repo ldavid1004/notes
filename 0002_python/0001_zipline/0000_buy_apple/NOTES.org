@@ -1,0 +1,99 @@
+
+* url
+
+http://techbus.safaribooksonline.com/book/programming/python/9781783985104/7dot-algorithmic-trading/ch07s05_html?query=%28%28zipline%29%29#X2ludGVybmFsX0h0bWxWaWV3P3htbGlkPTk3ODE3ODM5ODUxMDQlMkZjaDA3bHZsMnNlYzQ4X2h0bWwmcXVlcnk9KCh6aXBsaW5lKSk=
+
+http://stackoverflow.com/questions/17098654/how-to-store-data-frame-using-pandas-python
+
+* commands
+
+ipython
+
+** imports
+
+import zipline as zp
+import zipline.utils.factory as zpf
+from datetime import datetime
+import matplotlib.pyplot as plt
+
+
+** algorithm
+
+class BuyApple(zp.TradingAlgorithm):
+
+    trace=False
+
+    def __init__(self, trace=False):
+        BuyApple.trace = trace
+        super(BuyApple, self).__init__()
+
+    def initialize(context):
+        if BuyApple.trace: print("---> initialize")
+        if BuyApple.trace: print(context)
+        if BuyApple.trace: print("<--- initialize")
+
+    def handle_data(self, context):
+        if BuyApple.trace: print("---> handle_data")
+        if BuyApple.trace: print(context)
+        self.order("AAPL", 1)
+        if BuyApple.trace: print("<-- handle_data")
+
+%paste
+
+** plot prices
+
+
+data = zpf.load_from_yahoo(stocks=['AAPL'], 
+                           indexes={}, 
+                           start=datetime(1990, 1, 1),
+                           end=datetime(2014, 1, 1), 
+                           adjusted=False)
+
+%paste
+
+data.plot(figsize=(12,8));
+plt.show()
+
+** run algorithm
+
+result = BuyApple(trace=True).run(data['2000-01-03':'2000-01-07'])
+
+result.iloc[0].orders
+result.iloc[1].orders
+
+** portfolio
+
+result[['starting_cash', 'ending_cash', 'ending_value']]
+
+pvalue = result.ending_cash + result.ending_value
+
+result.portfolio_value
+
+result.portfolio_value.pct_change()
+
+result['returns']
+
+** longer run
+
+result_for_2000 = BuyApple().run(data['2000'])
+
+result_for_2000[['ending_cash', 'ending_value']]
+
+result_for_2000.portfolio_value.plot(figsize=(12,8));
+
+plt.show()
+
+result = BuyApple().run(data['2000':'2004']).portfolio_value
+
+result.plot(figsize=(12,8));
+
+plt.show()
+
+
+** save data
+
+data.to_pickle('aapl_1990_2014.pkl')
+
+** load data
+
+data.load('aapl_1990_2014.pkl')

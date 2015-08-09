@@ -1,0 +1,5 @@
+
+* git
+
+find . -type f  | grep -v pkl | grep -v \~ | grep -v \# | grep -v \.git | py -x '`git add %s` % x' | sh -x 
+

@@ -1,0 +1,13 @@
+zipline
+
+* url
+
+https://github.com/quantopian/zipline
+
+* conda
+
+source ~/anaconda/bin/activate finance
+
+conda install -c Quantopian zipline
+
+conda install statsmodels

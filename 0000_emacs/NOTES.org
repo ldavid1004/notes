@@ -1,0 +1,60 @@
+
+* url
+
+** fonts
+
+http://ergoemacs.org/emacs/emacs_list_and_set_font.html
+
+** org-mode
+
+http://orgmode.org/manual/Markdown-export.html
+
+* fonts
+
+** How to find the current font used?
+
+describe-char
+
+** How to change font size
+
+C-x C-+
+C-x C--
+
+
+** How to set default font in emacs init file ?
+
+(cond 
+ ((string-equal system-type "darwin") ; Mac OS X
+  (when (member "Menlo" (font-family-list))
+    (add-to-list 'initial-frame-alist '(font . "-*-Menlo-normal-normal-normal-*-21-*-*-*-m-0-iso10646-1"))
+    (add-to-list 'default-frame-alist '(font . "-*-Menlo-normal-normal-normal-*-21-*-*-*-m-0-iso10646-1")))))
+
+
+** How do you get the elements of a font list familiy ?
+
+# (defun print-elements-of-list (list)
+#   "Print each element of LIST on a line of its own."
+#   (while list
+#     (print (car list))
+#     (setq list (cdr list))))
+
+(defun print-elements-of-list (list)
+  "Print each element of LIST on a line of its own."
+  (progn
+    (insert "\n")
+    (while list
+      (insert (car list) "\n")
+      (setq list (cdr list)))))
+
+(print-elements-of-list (font-family-list))
+(print-elements-of-list (fontset-list))
+
+* org-mode
+
+** customize backends ( add markdown )
+
+customizing org-export-backends
+
+** export to markdown file
+
+C-c C-e m m     (org-md-export-to-markdown)

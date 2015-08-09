@@ -1,0 +1,28 @@
+pandas
+
+* url
+
+https://github.com/quantopian/zipline
+
+http://techbus.safaribooksonline.com/book/programming/python/9781783985104/7dot-algorithmic-trading/ch07s05_html?query=%28%28zipline%29%29#X2ludGVybmFsX0h0bWxWaWV3P3htbGlkPTk3ODE3ODM5ODUxMDQlMkZjaDA3bHZsMnNlYzQ4X2h0bWwmcXVlcnk9KCh6aXBsaW5lKSk=
+
+
+* 0000_plot_dataframe
+
+download price data an plot
+
+ipython
+
+from datetime import datetime
+import matplotlib.pyplot as plt
+
+import zipline.utils.factory as zpf
+data = zpf.load_from_yahoo(stocks=['AAPL'], 
+                           indexes={}, 
+                           start=datetime(1990, 1, 1),
+                           end=datetime(2014, 1, 1), 
+                           adjusted=False)
+
+data.plot()
+plt.show()
+

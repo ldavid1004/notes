@@ -1,0 +1,9 @@
+golang setup
+
+* url
+
+https://golang.org/doc/install
+
+* commands
+
+go run hello.go

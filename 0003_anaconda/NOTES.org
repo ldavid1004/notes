@@ -1,0 +1,26 @@
+simple conda
+
+* url
+
+** test drive
+http://conda.pydata.org/docs/test-drive.html
+
+** cheat sheet
+
+http://conda.pydata.org/docs/_downloads/conda-cheatsheet.pdf
+
+* commands
+
+~/anaconda/bin/conda update conda
+
+~/anaconda/bin/conda create --name finance pandas
+
+conda info --envs
+
+~/anaconda/bin/conda search pandas
+
+source ~/anaconda/bin/activate finance
+
+conda info --envs
+
+conda install -c main wget
