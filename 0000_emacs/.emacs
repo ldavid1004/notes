@@ -36,7 +36,10 @@
  ((string-equal system-type "darwin") ; Mac OS X
   (when (member "Menlo" (font-family-list))
     (add-to-list 'initial-frame-alist '(font . "-*-Menlo-normal-normal-normal-*-21-*-*-*-m-0-iso10646-1"))
-    (add-to-list 'default-frame-alist '(font . "-*-Menlo-normal-normal-normal-*-21-*-*-*-m-0-iso10646-1")))))
+    (add-to-list 'default-frame-alist '(font . "-*-Menlo-normal-normal-normal-*-21-*-*-*-m-0-iso10646-1"))))
+ ((string-equal system-type "cygwin") ; windows - cygwin
+  (set-face-attribute 'default nil
+                    :family "Consolas" :height 200)))
 
 ;; (set-default-font "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
 ;; (set-default-font "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
