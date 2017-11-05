@@ -1,0 +1,4 @@
+#!/bin/bash
+
+unset DESK_NAME
+unset DESK_ENV
