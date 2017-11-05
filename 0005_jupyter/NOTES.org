@@ -1,5 +1,11 @@
 jupyter
 
+* url
+
+** Building identical conda environments
+
+https://conda.io/docs/user-guide/tasks/manage-environments.html#building-identical-conda-environments
+
 * commands
 
 ** list conda environments
@@ -17,3 +23,17 @@ source activate jupyter
 ** install
 
 pip install -r requirements.txt
+
+** cloneing jupyter env
+
+conda list --explicit
+
+conda list --explicit > spec-file.txt
+
+*** To use the spec file to create an identical environment on the same machine or another machine:
+
+conda create --name jupyter --file spec-file.txt
+
+*** To use the spec file to install its listed packages into an existing environment:
+
+conda install --name jupyter --file spec-file.txt
