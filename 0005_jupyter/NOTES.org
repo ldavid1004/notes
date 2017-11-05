@@ -1,0 +1,19 @@
+jupyter
+
+* commands
+
+** list conda environments
+
+conda env list
+
+** create jupyter conda env
+
+conda create -n jupyter jupyter
+
+** activate jupyter
+
+source activate jupyter
+
+** install
+
+pip install -r requirements.txt
