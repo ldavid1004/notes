@@ -18,7 +18,7 @@ conda create -n jupyter jupyter
 
 ** activate jupyter
 
-source activate jupyter
+source activate jupyterenv
 
 ** install
 
@@ -32,8 +32,13 @@ conda list --explicit > spec-file.txt
 
 *** To use the spec file to create an identical environment on the same machine or another machine:
 
-conda create --name jupyter --file spec-file.txt
+conda create --name jupyterenv --file spec-file.txt
+
 
 *** To use the spec file to install its listed packages into an existing environment:
 
-conda install --name jupyter --file spec-file.txt
+conda install --name jupyterenv --file spec-file.txt
+
+** destroy jupyter env
+
+conda remove --name jupyterenv --all
