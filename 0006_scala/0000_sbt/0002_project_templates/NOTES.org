@@ -6,6 +6,10 @@ sbt project templates
 
 http://www.scala-sbt.org/0.13/docs/sbt-new-and-Templates.html
 
+** Giter8
+
+http://www.foundweekends.org/giter8/
+
 * commands
 
 ** sbt new
