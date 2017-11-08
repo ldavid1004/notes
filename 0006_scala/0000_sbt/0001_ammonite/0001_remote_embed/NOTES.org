@@ -1,0 +1,106 @@
+embed ammonite repl for remote ( ssh ) access
+
+* url
+
+** embedding ammonite
+
+http://ammonite.io/#Embedding
+
+** SBT Native Packager
+
+https://github.com/sbt/sbt-native-packager
+
+** Java Code Examples for org.apache.sshd.server.auth.password.PasswordAuthenticator
+
+https://www.programcreek.com/java-api-examples/index.php?api=org.apache.sshd.server.auth.password.PasswordAuthenticator
+
+
+* commands
+
+** create project
+
+sbt new sbt/scala-seed.g8
+
+ammonite-remote-repl
+
+cd ammonite-remote-repl
+sbt
+run
+
+** add sbt-native-packager plugin
+
+cat <<EOF > project/plugins.sbt
+// for autoplugins
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.1")
+EOF
+
+** update build.sbt with dependencies and enable JavaAppPackaging
+
+cat <<EOF >> build.sbt
+
+libraryDependencies += "com.lihaoyi" % "ammonite-sshd" % "1.0.3" cross CrossVersion.full
+
+enablePlugins(JavaAppPackaging)
+
+EOF
+
+reload
+
+** embed ammonite sshd repl
+
+
+cat <<EOF > ../ammonite-sshd-import.scala.frg
+
+import ammonite.sshd._
+import org.apache.sshd.server.auth.password.PasswordAuthenticator
+import org.apache.sshd.server.session.ServerSession
+EOF
+
+
+source activate awsenv
+cat src/main/scala/example/Hello.scala | py -x 'x if x != "package example" else x + "\n"+ open("../ammonite-sshd-import.scala.frg","rb").read()' > src/main/scala/example/Hello.scala.new
+mv src/main/scala/example/Hello.scala.new src/main/scala/example/Hello.scala
+
+cat <<EOF > ../ammonite-sshd.scala.frg
+
+  def dude(name: String) = {
+    println(s"Howdy, \${name} !")
+  }
+
+  object passwordChecker extends PasswordAuthenticator {
+    def authenticate(username: String, password: String, session: ServerSession): Boolean = {
+      username == "debug-user" && password == "debug-password"
+    }
+  }
+
+  val replServer = new SshdRepl(
+    SshServerConfig(
+      address = "localhost", // or "0.0.0.0" for public-facing shells
+      port = 22222, // Any available port
+      passwordAuthenticator = Some(passwordChecker) // or publicKeyAuthenticator
+    ),
+    replArgs = Seq(("dude" -> dude _))
+  )
+
+  replServer.start()
+
+  println(greeting)
+  Thread.sleep(100000)
+
+EOF
+
+cat src/main/scala/example/Hello.scala | py -x 'x if x != "object Hello extends Greeting with App {" else x + "\n"+ open("../ammonite-sshd.scala.frg","rb").read()' > src/main/scala/example/Hello.scala.new
+mv src/main/scala/example/Hello.scala.new src/main/scala/example/Hello.scala
+
+** package and run
+
+sbt universal:packageBin
+rm -rf hello-0.1.0-SNAPSHOT
+unzip target/universal/hello-0.1.0-SNAPSHOT.zip
+hello-0.1.0-SNAPSHOT/bin/hello
+
+ssh -p 22222 debug-user@localhost
+
+debug-password
+dude("HI")
+exit
