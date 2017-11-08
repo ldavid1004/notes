@@ -1,0 +1,14 @@
+install sbt
+
+* url
+
+** Installing sbt on Mac 
+
+http://www.scala-sbt.org/1.0/docs/Installing-sbt-on-Mac.html
+
+
+* commands
+
+brew install sbt@1
+
+

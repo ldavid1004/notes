@@ -1,0 +1,76 @@
+embed ammonite repl and create native package to verify that it works
+
+* url
+
+** embedding ammonite
+
+http://ammonite.io/#Embedding
+
+** SBT Native Packager
+
+https://github.com/sbt/sbt-native-packager
+
+** Inspect the build
+
+http://www.scala-sbt.org/1.x/docs/Howto-Inspect-the-Build.html
+
+* commands
+
+** create project
+
+sbt new sbt/scala-seed.g8
+
+ammonite-repl
+
+cd ammonite-repl
+sbt
+run
+
+** add sbt-native-packager plugin
+
+cat <<EOF > project/plugins.sbt
+// for autoplugins
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.1")
+EOF
+
+** update build.sbt with dependencies and enable JavaAppPackaging
+
+cat <<EOF >> build.sbt
+
+libraryDependencies += "com.lihaoyi" % "ammonite" % "1.0.3" cross CrossVersion.full
+
+enablePlugins(JavaAppPackaging)
+EOF
+
+reload
+
+** embed ammonite
+
+# requires pythonpy to be installed
+
+sed -i .orig '/package example/a\
+import ammonite._\
+' src/main/scala/example/Hello.scala
+
+
+cat <<EOF > ../ammonite.scala.frg
+
+  def dude(name: String) = {
+    println(s"Howdy, \${name} !")
+  }
+
+  ammonite.Main( predefCode = "println(\"Starting Debugging\")" ).run( "dude" -> dude _ )
+
+EOF
+
+cat src/main/scala/example/Hello.scala | py -x 'x if x != "object Hello extends Greeting with App {" else x + "\n"+ open("../ammonite.scala.frg","rb").read()' > src/main/scala/example/Hello.scala.new
+mv src/main/scala/example/Hello.scala.new src/main/scala/example/Hello.scala
+
+
+** package and run
+
+sbt universal:packageBin
+unzip target/universal/hello-0.1.0-SNAPSHOT.zip
+hello-0.1.0-SNAPSHOT/bin/hello
+dude("HI")
+exit
