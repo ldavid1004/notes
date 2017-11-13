@@ -3,3 +3,5 @@
 repository/
 simpleScala/
 0006_scala/0001_maven/0000_scala-archetype-simple/settings.xml
+0007_vim/0000_command_line/pom.xml
+0007_vim/0000_command_line/specs-junit.frg
