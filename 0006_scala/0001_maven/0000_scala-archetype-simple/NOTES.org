@@ -1,0 +1,58 @@
+create simple maven scala project using net.alchim31.maven:scala-archetype-simple archetype
+
+* url
+
+** SCALA WITH MAVEN
+
+https://docs.scala-lang.org/tutorials/scala-with-maven.html
+
+
+* commmands
+
+** kill vim
+
+ps -ef | grep vim | grep  -v grep | awk '{ print "kill " $2}'  | sh -x
+
+** create settings.xml
+
+cp settings.xml.tmpl settings.xml
+vim +"/<localRepository>/ | +1 | /<localRepository>/ | d | put! ='  <localRepository>${PWD}/repository</localRepository>' | x" settings.xml
+
+** create net.alchim31.maven:scala-archetype-simple
+
+mvn -s settings.xml archetype:generate -B \
+    -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple -DarchetypeVersion=1.6 \
+    -DgroupId=sample.ex -DartifactId=simpleScala -Dversion=0.1-SNAPSHOT -Dpackage=sample.ex
+
+** fix issues
+
+*** issues
+
+**** issue: make:transitive
+
+causes [ERROR] scalac error: bad option: '-make:transitive'
+
+**** [ERROR]  error: not found: type JUnitRunner
+
+specs2-junit not being included in dependencies
+
+*** fix
+
+cat <<EOF > specs-junit.frg
+    <dependency>
+      <groupId>org.specs2</groupId>
+      <artifactId>specs2-junit_\${scala.compat.version}</artifactId>
+      <version>2.4.16</version>
+      <scope>test</scope>
+    </dependency>
+EOF
+
+vim +"/make:transitive/ | d | 1 | /<\/dependencies>/ | -1 | r ${PWD}/specs-junit.frg | x" simpleScala/pom.xml
+
+** package
+
+cd simpleScala
+mvn -s $(dirname $(pwd))/settings.xml clean package
+
+** clean
+
