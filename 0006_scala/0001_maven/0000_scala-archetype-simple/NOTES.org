@@ -55,4 +55,22 @@ cd simpleScala
 mvn -s $(dirname $(pwd))/settings.xml clean package
 
 ** clean
+rm -rf  *~ simpleScala
+** create settings with scripts
+
+./bin/create_settings.sh
+
+** create maven project with scripts
+
+./bin/create_maven_scala_project.sh settings.xml simpleScala sample.ex
+
+** package
+
+cd simpleScala
+mvn -s ../settings.xml clean package
+
+** run package
+
+cd simpleScala
+java -jar target/*.jar hi
 
