@@ -1,0 +1,54 @@
+datetime
+
+* url
+
+** How to make a timezone aware datetime object in Python?
+
+[[https://stackoverflow.com/questions/7065164/how-to-make-a-timezone-aware-datetime-object-in-python][How to make a timezone aware datetime object in Python?]]
+
+https://stackoverflow.com/questions/7065164/how-to-make-a-timezone-aware-datetime-object-in-python
+
+** 
+
+* howto
+
+** How to make a timezone aware datetime object in Python?
+
+import datetime
+import pytz
+
+unaware = datetime.datetime(2011, 8, 15, 8, 15, 12, 0)
+aware = datetime.datetime(2011, 8, 15, 8, 15, 12, 0, pytz.UTC)
+
+now_aware = pytz.utc.localize(unaware)
+assert aware == now_aware
+   
+** convert int timestamp to datetime
+
+from datetime import datetime
+
+datetime.fromtimestamp(1622564162.793000)
+
+** get timestamp from current time
+
+import pytz
+from datetime import datetime
+current = datetime.now()
+timezone = pytz.timezone("America/Los_Angeles")
+
+aware = timezone.localize(current)
+
+current.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+
+aware.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+
+current_utc = aware.astimezone(pytz.timezone('UTC'))
+
+current_timestamp = current_utc.timestamp()
+
+** get current time with timezone from timestamp
+
+back_dt = datetime.utcfromtimestamp(current_timestamp)
+local_back_dt = pytz.utc.localize(back_dt, is_dst=None).astimezone(pytz.timezone('America/Los_Angeles'))
+
+local_back_dt.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
